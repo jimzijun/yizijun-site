@@ -1,27 +1,49 @@
 # YizijunSite
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.3.
+This repository contains the Angular app for `yizijun-site`.
 
-## Development server
+## Stack
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+- Angular `21.2.x`
+- Angular CLI `21.2.x`
+- Angular build system via `@angular/build`
+- Unit tests via Angular's built-in Vitest runner
 
-## Code scaffolding
+## Install
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```bash
+npm install
+```
+
+## Local development
+
+```bash
+npm start
+```
+
+The dev server runs at `http://localhost:4200/`.
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+```bash
+npm run build
+```
 
-## Running unit tests
+Production output is written to `dist/yizijun-site/`.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Tests
 
-## Running end-to-end tests
+```bash
+npm test
+```
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+To run tests once without watch mode:
 
-## Further help
+```bash
+npm test -- --watch=false
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## Notes
+
+- The old Angular 9-era Karma, Protractor, and TSLint setup has been removed.
+- The app still depends on `p5`, which currently produces a non-fatal CommonJS warning during production builds.
