@@ -9,9 +9,6 @@ on:
 jobs:
   nextjs-build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: nextjs-site
     steps:
       - name: Checkout
         uses: actions/checkout@v4
