@@ -15,6 +15,9 @@
   --color-success: #22c55e;
   --color-danger: #f43f5e;
 
+  --shadow-soft: 0 10px 30px rgba(2, 6, 23, 0.22);
+  --shadow-lift: 0 16px 36px rgba(2, 6, 23, 0.32);
+
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
@@ -128,7 +131,7 @@ a {
 .panel,
 .panel-link,
 .snake-shell {
-  border: 1px solid var(--color-border);
+  border: 1px solid color-mix(in srgb, var(--color-border) 85%, #94a3b8);
   border-radius: var(--radius-md);
   background: var(--color-surface);
   box-shadow: var(--shadow-soft);
@@ -145,7 +148,7 @@ a {
   font-weight: 700;
   letter-spacing: 0.03em;
   min-width: 170px;
-  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card-link:hover,
@@ -153,6 +156,17 @@ a {
   transform: translateY(-2px);
   border-color: var(--color-accent-strong);
   background: color-mix(in srgb, var(--color-surface) 80%, var(--color-accent-strong));
+  box-shadow: var(--shadow-lift);
+}
+
+.panel {
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.panel:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--color-accent) 70%, var(--color-border));
+  box-shadow: var(--shadow-lift);
 }
 
 .page h1 {
