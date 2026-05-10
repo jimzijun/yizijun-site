@@ -59,8 +59,8 @@ export default function SnakePage() {
       snake.forEach((p) => ctx.fillRect(p.x * CELL, p.y * CELL, CELL - 2, CELL - 2));
 
       if (!alive) {
-        ctx.fillStyle = 'white';
-        ctx.font = '24px sans-serif';
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = '24px Inter, sans-serif';
         ctx.fillText('Game Over', 130, 200);
       }
     }, 110);
@@ -74,8 +74,10 @@ export default function SnakePage() {
   return (
     <section className="page">
       <h1>Snake</h1>
-      <p>Use arrow keys to play. Score: {score}</p>
-      <canvas ref={canvasRef} width={400} height={400} className="snake-canvas" />
+      <p className="snake-meta">Use arrow keys to play. Score: {score}</p>
+      <div className="snake-shell">
+        <canvas ref={canvasRef} width={400} height={400} className="snake-canvas" />
+      </div>
     </section>
   );
 }
