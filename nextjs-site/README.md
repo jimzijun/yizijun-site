@@ -18,6 +18,16 @@ npm run build
 npm run start
 ```
 
+## GitHub Pages deployment
+
+This project deploys with GitHub Actions via `.github/workflows/cd.yml`.
+
+- CD publishes the static export from `nextjs-site/out`.
+- `next.config.js` is configured for static export and repo base path on GitHub Actions.
+
+Repository settings requirement:
+- In **Settings → Pages**, set **Source** to **GitHub Actions**.
+
 ## Routes
 
 - `/` Home (WELCOME, Games/Portfolio navigation)
