@@ -11,7 +11,7 @@ export default function PortfolioPage() {
   return (
     <section className="page">
       <h1>Online Portfolio</h1>
-      <p>This page recreates the portfolio structure from the original website.</p>
+      <p className="lead">This page recreates the portfolio structure from the original website.</p>
       <div className="grid">
         {items.map((item) => (
           <article className="panel" key={item.title}>
