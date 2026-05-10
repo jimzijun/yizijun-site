@@ -6,8 +6,8 @@ export default function HomePage() {
       <h1>Yizijun&apos;s Website</h1>
       <p>WELCOME</p>
       <div className="cta-row">
-        <Link className="card" href="/games">GAMES</Link>
-        <Link className="card" href="/portfolio">PORTFOLIO</Link>
+        <Link className="card-link" href="/games">GAMES</Link>
+        <Link className="card-link" href="/portfolio">PORTFOLIO</Link>
       </div>
     </section>
   );
