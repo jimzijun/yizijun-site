@@ -2,16 +2,34 @@
 
 import { useEffect, useRef } from 'react';
 
-type Bubble = {
+type Circle = {
   x: number;
   y: number;
   r: number;
-  vy: number;
-  drift: number;
-  alpha: number;
+  growing: boolean;
+  color: [number, number, number];
 };
 
-const BUBBLE_COLOR = '147, 197, 253';
+const TOTAL_ATTEMPTS_PER_FRAME = 15;
+const GLOBAL_ATTEMPT_CAP = 500;
+const GROWTH_STEP = 2;
+
+const randomColor = (): [number, number, number] => {
+  const colorSca = [0.6 + Math.random() * 0.7, 0.6 + Math.random() * 0.7, 0.6 + Math.random() * 0.7];
+  const channels = [
+    Math.floor(Math.random() * 255),
+    Math.floor(Math.random() * 255),
+    Math.floor(Math.random() * 255),
+  ];
+
+  // legacy-ish randomized channel scaling permutation
+  const order = [0, 1, 2].sort(() => Math.random() - 0.5);
+  return [
+    Math.floor(channels[order[0]] * colorSca[0]),
+    Math.floor(channels[order[1]] * colorSca[1]),
+    Math.floor(channels[order[2]] * colorSca[2]),
+  ];
+};
 
 export default function BubbleBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -26,88 +44,131 @@ export default function BubbleBackground() {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-    let rafId = 0;
     let width = 0;
     let height = 0;
+    let rafId = 0;
+    let shouldAnimate = true;
 
-    const bubbles: Bubble[] = [];
+    let circles: Circle[] = [];
+    let failedAttempts = 0;
 
-    const densityForWidth = (w: number) => {
-      if (media.matches) return 12;
-      if (w < 640) return 26;
-      return 42;
+    const collidesWithExisting = (x: number, y: number, extraRadius = 0, skipIndex = -1): boolean => {
+      for (let i = 0; i < circles.length; i += 1) {
+        if (i === skipIndex) continue;
+        const c = circles[i];
+        const dx = x - c.x;
+        const dy = y - c.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < c.r + extraRadius + 0.5) return true;
+      }
+      return false;
     };
 
-    const spawnBubble = (fromBottom = false): Bubble => ({
-      x: Math.random() * width,
-      y: fromBottom ? height + Math.random() * 60 : Math.random() * height,
-      r: 5 + Math.random() * 22,
-      vy: 0.18 + Math.random() * 0.38,
-      drift: (Math.random() - 0.5) * 0.18,
-      alpha: 0.08 + Math.random() * 0.22,
-    });
+    const touchesEdge = (c: Circle): boolean =>
+      c.x + c.r >= width || c.x - c.r <= 0 || c.y + c.r >= height || c.y - c.r <= 0;
 
-    const rebuildBubbles = () => {
-      const target = densityForWidth(width);
-      bubbles.length = 0;
-      for (let i = 0; i < target; i += 1) bubbles.push(spawnBubble(false));
+    const tryCreateCircle = (): Circle | null => {
+      const x = Math.random() * width;
+      const y = Math.random() * height;
+
+      if (collidesWithExisting(x, y, 1.5)) {
+        failedAttempts += 1;
+        return null;
+      }
+
+      return {
+        x,
+        y,
+        r: Math.random() * 2,
+        growing: true,
+        color: randomColor(),
+      };
+    };
+
+    const draw = () => {
+      ctx.fillStyle = 'rgb(0,0,0)';
+      ctx.fillRect(0, 0, width, height);
+
+      for (let i = 0; i < circles.length; i += 1) {
+        const c = circles[i];
+
+        if (c.growing) {
+          if (touchesEdge(c) || collidesWithExisting(c.x, c.y, c.r + GROWTH_STEP, i)) {
+            c.growing = false;
+          } else {
+            c.r += GROWTH_STEP;
+          }
+        }
+
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgb(${c.color[0]}, ${c.color[1]}, ${c.color[2]})`;
+        ctx.fill();
+      }
+    };
+
+    const tick = () => {
+      for (let i = 0; i < TOTAL_ATTEMPTS_PER_FRAME; i += 1) {
+        const circle = tryCreateCircle();
+        if (circle) circles.push(circle);
+      }
+
+      draw();
+
+      if (shouldAnimate && failedAttempts <= GLOBAL_ATTEMPT_CAP) {
+        rafId = window.requestAnimationFrame(tick);
+      }
     };
 
     const resize = () => {
       width = window.innerWidth;
-      height = Math.max(window.innerHeight, document.body.scrollHeight);
+      height = window.innerHeight;
 
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
-
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      rebuildBubbles();
-      drawFrame(false);
-    };
 
-    const drawFrame = (animate = true) => {
-      ctx.clearRect(0, 0, width, height);
+      circles = [];
+      failedAttempts = 0;
+      shouldAnimate = !media.matches;
 
-      for (let i = 0; i < bubbles.length; i += 1) {
-        const b = bubbles[i];
-        if (animate) {
-          b.y -= b.vy;
-          b.x += b.drift;
-
-          if (b.y + b.r < -20 || b.x + b.r < -20 || b.x - b.r > width + 20) {
-            bubbles[i] = spawnBubble(true);
-            continue;
+      draw();
+      if (shouldAnimate) {
+        if (rafId) window.cancelAnimationFrame(rafId);
+        rafId = window.requestAnimationFrame(tick);
+      } else {
+        // Reduced-motion fallback: build a static packed frame and stop.
+        while (failedAttempts <= GLOBAL_ATTEMPT_CAP) {
+          for (let i = 0; i < TOTAL_ATTEMPTS_PER_FRAME; i += 1) {
+            const circle = tryCreateCircle();
+            if (circle) circles.push(circle);
+          }
+          for (let i = 0; i < circles.length; i += 1) {
+            const c = circles[i];
+            if (c.growing) {
+              if (touchesEdge(c) || collidesWithExisting(c.x, c.y, c.r + GROWTH_STEP, i)) {
+                c.growing = false;
+              } else {
+                c.r += GROWTH_STEP;
+              }
+            }
           }
         }
-
-        const grad = ctx.createRadialGradient(b.x - b.r * 0.3, b.y - b.r * 0.3, b.r * 0.1, b.x, b.y, b.r);
-        grad.addColorStop(0, `rgba(${BUBBLE_COLOR}, ${Math.min(b.alpha + 0.12, 0.35)})`);
-        grad.addColorStop(1, `rgba(${BUBBLE_COLOR}, 0)`);
-
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      if (!media.matches) {
-        rafId = window.requestAnimationFrame(() => drawFrame(true));
+        draw();
       }
     };
 
     const onMotionChange = () => {
       if (rafId) window.cancelAnimationFrame(rafId);
       resize();
-      if (!media.matches) drawFrame(true);
     };
 
     window.addEventListener('resize', resize);
     media.addEventListener('change', onMotionChange);
 
     resize();
-    if (!media.matches) drawFrame(true);
 
     return () => {
       if (rafId) window.cancelAnimationFrame(rafId);
