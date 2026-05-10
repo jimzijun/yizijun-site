@@ -1,49 +1,36 @@
-# YizijunSite
+# yizijun-site Next.js recreation
 
-This repository contains the Angular app for `yizijun-site`.
+This repository now uses a Next.js recreation of the website requested in issue #67.
 
-## Stack
-
-- Angular `21.2.x`
-- Angular CLI `21.2.x`
-- Angular build system via `@angular/build`
-- Unit tests via Angular's built-in Vitest runner
-
-## Install
+## Run locally
 
 ```bash
 npm install
+npm run dev
 ```
 
-## Local development
+Open http://localhost:3000
 
-```bash
-npm start
-```
-
-The dev server runs at `http://localhost:4200/`.
-
-## Build
+## Build for production
 
 ```bash
 npm run build
+npm run start
 ```
 
-Production output is written to `dist/yizijun-site/`.
+## GitHub Pages deployment
 
-## Tests
+This project deploys with GitHub Actions via `.github/workflows/cd.yml`.
 
-```bash
-npm test
-```
+- CD publishes the static export from `out`.
+- `next.config.js` is configured for static export and repo base path on GitHub Actions.
 
-To run tests once without watch mode:
+Repository settings requirement:
+- In **Settings → Pages**, set **Source** to **GitHub Actions**.
 
-```bash
-npm test -- --watch=false
-```
+## Routes
 
-## Notes
-
-- The old Angular 9-era Karma, Protractor, and TSLint setup has been removed.
-- The app still depends on `p5`, which currently produces a non-fatal CommonJS warning during production builds.
+- `/` Home (WELCOME, Games/Portfolio navigation)
+- `/portfolio` Portfolio overview sections
+- `/games` Games landing
+- `/games/snake` Snake mini-game
