@@ -11,6 +11,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
+        <a className="skip-link" href="#main-content">
+          Skip to main content
+        </a>
         <header className="site-header">
           <nav className="nav" aria-label="Primary">
             <Link className="nav-link" href="/">Home</Link>
@@ -18,7 +21,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Link className="nav-link" href="/games">Games</Link>
           </nav>
         </header>
-        <main className="page-shell">{children}</main>
+        <main id="main-content" className="page-shell">
+          {children}
+        </main>
       </body>
     </html>
   );
