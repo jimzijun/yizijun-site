@@ -42,8 +42,25 @@ export default function HomePage() {
         <h2 id="contact-heading">Contact</h2>
         <p className="lead contact-intro">Best for recruiter outreach, interview loops, and collaboration discussions.</p>
         <div className="contact-actions">
-          <a className="card-link" href="mailto:yizijuny@gmail.com">Email</a>
-          <a className="card-link" href="https://www.linkedin.com/in/zijun-yi-03a4382ab" target="_blank" rel="noreferrer">
+          <a className="card-link" href="mailto:yizijuny@gmail.com" aria-label="Email Jim at yizijuny@gmail.com">
+            Email
+          </a>
+          <a
+            className="card-link"
+            href="https://calendly.com/yizijuny"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Book time with Jim on Calendly"
+          >
+            Calendly
+          </a>
+          <a
+            className="card-link"
+            href="https://www.linkedin.com/in/zijun-yi-03a4382ab"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Open Jim's LinkedIn profile"
+          >
             LinkedIn
           </a>
         </div>
