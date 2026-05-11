@@ -1,6 +1,19 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import BubbleBackground from '@/components/BubbleBackground';
 import { getPinnedProjects } from '@/lib/projects';
+
+export const metadata: Metadata = {
+  title: 'Home',
+  description:
+    'AI Engineer portfolio homepage with recruiter-focused value proposition, project proof, and direct contact channels.',
+  openGraph: {
+    title: 'Zijun Yi | AI Engineer Portfolio',
+    description:
+      'Explore shipped AI and automation work, then connect via email, Calendly, or LinkedIn.',
+    url: 'https://jimzijun.github.io/yizijun-site',
+  },
+};
 
 export default function HomePage() {
   const projects = getPinnedProjects();
