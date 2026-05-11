@@ -36,6 +36,38 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section aria-labelledby="trust-heading" className="resume-section">
+        <h2 id="trust-heading">How I Deliver</h2>
+        <div className="grid">
+          <article className="panel">
+            <h3>About</h3>
+            <p>
+              AI Engineer focused on shipping production systems end-to-end: product framing, backend reliability,
+              and measurable delivery outcomes.
+            </p>
+          </article>
+          <article className="panel">
+            <h3>How I Work</h3>
+            <ul className="resume-list">
+              <li>Start with user outcome + acceptance criteria before implementation.</li>
+              <li>Ship in small, testable increments with CI-backed validation.</li>
+              <li>Prioritize reliability, observability, and maintainable handoff quality.</li>
+            </ul>
+          </article>
+          <article className="panel">
+            <h3>Public Metrics (in review)</h3>
+            <p className="resume-meta">
+              Final recruiter-facing metrics are being finalized; placeholders remain until approval.
+            </p>
+            <ul className="resume-list">
+              <li>Production reliability metric — pending approval</li>
+              <li>Delivery velocity metric — pending approval</li>
+              <li>Scale/impact metric — pending approval</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
       <section id="projects" aria-labelledby="projects-heading" className="resume-section">
         <h2 id="projects-heading">Projects</h2>
         <div className="grid">
