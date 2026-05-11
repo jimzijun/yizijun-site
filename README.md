@@ -71,3 +71,21 @@ Optional fields:
 - `repo` should be `owner/repo` and is used for GitHub metadata hydration
 
 Runtime validation is in `src/app/portfolio/page.tsx` (`isPinnedProject` + `getPinnedProjects`). Invalid entries fail fast during render/build.
+
+## Lighthouse quality gate (Issue #105)
+
+Run a recruiter-page quality check locally:
+
+```bash
+npm run quality:check
+```
+
+This produces `lighthouse-report.json` using Lighthouse desktop preset and evaluates:
+- Performance
+- Accessibility
+
+Latest baseline (local run against `/`):
+- Performance: **100**
+- Accessibility: **100**
+
+Note: the quality gate target for this repo is desktop Lighthouse >= 90 for recruiter-critical pages.
