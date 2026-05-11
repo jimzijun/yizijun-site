@@ -1,4 +1,5 @@
-import pinnedProjectsRaw from '@/data/pinned-projects.json';
+import pinnedProjectCards from '@/data/projects.pinned.json';
+import { parsePinnedProjectCards } from '@/lib/project-cards';
 
 const highlights = [
   '3+ years shipping production data and backend systems',
@@ -41,43 +42,7 @@ const experience: ExperienceItem[] = [
   },
 ];
 
-type PinnedProject = {
-  title: string;
-  impact: string;
-  role: string;
-  link: string;
-  repo: string;
-  blurb?: string;
-};
-
-function isPinnedProject(value: unknown): value is PinnedProject {
-  if (!value || typeof value !== 'object') return false;
-
-  const candidate = value as Record<string, unknown>;
-
-  return (
-    typeof candidate.title === 'string' &&
-    typeof candidate.impact === 'string' &&
-    typeof candidate.role === 'string' &&
-    typeof candidate.link === 'string' &&
-    typeof candidate.repo === 'string' &&
-    (candidate.blurb === undefined || typeof candidate.blurb === 'string')
-  );
-}
-
-function getPinnedProjects(): PinnedProject[] {
-  if (!Array.isArray(pinnedProjectsRaw)) {
-    throw new Error('Pinned projects JSON must be an array.');
-  }
-
-  const parsed = pinnedProjectsRaw.filter(isPinnedProject);
-
-  if (parsed.length !== pinnedProjectsRaw.length) {
-    throw new Error('Pinned projects JSON contains invalid entries.');
-  }
-
-  return parsed;
-}
+const pinnedProjects = parsePinnedProjectCards(pinnedProjectCards);
 
 type GithubRepoMetadata = {
   full_name: string;
@@ -98,8 +63,6 @@ type ProjectCard = {
 };
 
 async function fetchCuratedProjects(): Promise<{ cards: ProjectCard[]; hasFetchFailure: boolean }> {
-  const pinnedProjects = getPinnedProjects();
-
   const results = await Promise.all(
     pinnedProjects.map(async (item) => {
       try {
@@ -116,7 +79,7 @@ async function fetchCuratedProjects(): Promise<{ cards: ProjectCard[]; hasFetchF
         }
 
         const repo = (await response.json()) as GithubRepoMetadata;
-        const description = item.blurb ?? repo.description ?? 'No description available yet.';
+        const description = item.summary ?? repo.description ?? 'No description available yet.';
 
         return {
           card: {
@@ -124,7 +87,7 @@ async function fetchCuratedProjects(): Promise<{ cards: ProjectCard[]; hasFetchF
             title: item.title,
             link: item.link || repo.html_url,
             description,
-            language: repo.language ?? 'Not specified',
+            language: repo.language ?? item.stack ?? 'Not specified',
             impact: item.impact,
             role: item.role,
           },
@@ -136,8 +99,8 @@ async function fetchCuratedProjects(): Promise<{ cards: ProjectCard[]; hasFetchF
             repo: item.repo,
             title: item.title,
             link: item.link || `https://github.com/${item.repo}`,
-            description: item.blurb ?? 'Project details are temporarily unavailable. View the repository on GitHub.',
-            language: 'Unavailable',
+            description: item.summary ?? 'Project details are temporarily unavailable. View the repository on GitHub.',
+            language: item.stack ?? 'Unavailable',
             impact: item.impact,
             role: item.role,
           },

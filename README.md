@@ -28,6 +28,23 @@ This project deploys with GitHub Actions via `.github/workflows/cd.yml`.
 Repository settings requirement:
 - In **Settings → Pages**, set **Source** to **GitHub Actions**.
 
+## Project card pinned data
+
+Portfolio project cards are sourced from `src/data/projects.pinned.json` in curated order.
+
+Each entry must include these required fields:
+- `title` (string)
+- `impact` (string, one-line impact statement)
+- `role` (string)
+- `link` (string URL)
+
+Optional fields (safe to omit):
+- `stack` (string)
+- `summary` (string)
+- `highlights` (string[])
+
+Validation/parsing is enforced in `src/lib/project-cards.ts`. Invalid or missing required fields fail fast during render/build, so broken entries are caught early.
+
 ## Routes
 
 - `/` Home (WELCOME, Games/Portfolio navigation)
