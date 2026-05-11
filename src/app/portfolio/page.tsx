@@ -44,77 +44,7 @@ const experience: ExperienceItem[] = [
 
 const pinnedProjects = parsePinnedProjectCards(pinnedProjectCards);
 
-type GithubRepoMetadata = {
-  full_name: string;
-  html_url: string;
-  description: string | null;
-  language: string | null;
-  name: string;
-};
-
-type ProjectCard = {
-  repo: string;
-  title: string;
-  link: string;
-  description: string;
-  language: string;
-  impact: string;
-  role: string;
-};
-
-async function fetchCuratedProjects(): Promise<{ cards: ProjectCard[]; hasFetchFailure: boolean }> {
-  const results = await Promise.all(
-    pinnedProjects.map(async (item) => {
-      try {
-        const response = await fetch(`https://api.github.com/repos/${item.repo}`, {
-          next: { revalidate: 3600 },
-          headers: {
-            Accept: 'application/vnd.github+json',
-            'User-Agent': 'yizijun-site-projects-section',
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`GitHub fetch failed for ${item.repo}: ${response.status}`);
-        }
-
-        const repo = (await response.json()) as GithubRepoMetadata;
-        const description = item.summary ?? repo.description ?? 'No description available yet.';
-
-        return {
-          card: {
-            repo: item.repo,
-            title: item.title,
-            link: item.link || repo.html_url,
-            description,
-            language: repo.language ?? item.stack ?? 'Not specified',
-            impact: item.impact,
-            role: item.role,
-          },
-          fetchFailed: false,
-        };
-      } catch {
-        return {
-          card: {
-            repo: item.repo,
-            title: item.title,
-            link: item.link || `https://github.com/${item.repo}`,
-            description: item.summary ?? 'Project details are temporarily unavailable. View the repository on GitHub.',
-            language: item.stack ?? 'Unavailable',
-            impact: item.impact,
-            role: item.role,
-          },
-          fetchFailed: true,
-        };
-      }
-    }),
-  );
-
-  return {
-    cards: results.map((result) => result.card),
-    hasFetchFailure: results.some((result) => result.fetchFailed),
-  };
-}
+const projectCards = pinnedProjects;
 
 const skills = {
   languages: ['Python', 'Java', 'SQL', 'Bash'],
@@ -123,8 +53,7 @@ const skills = {
   dataMl: ['Spark', 'Airflow', 'Elasticsearch', 'Pandas', 'NumPy', 'PyTorch', 'scikit-learn', 'Transformers/Embeddings'],
 };
 
-export default async function PortfolioPage() {
-  const { cards: projectCards, hasFetchFailure } = await fetchCuratedProjects();
+export default function PortfolioPage() {
 
   return (
     <section className="page resume-page">
@@ -174,23 +103,26 @@ export default async function PortfolioPage() {
       <div id="projects" className="resume-section">
         <h2>Projects</h2>
         <p className="resume-meta">Curated repositories selected for recruiter-friendly scanning.</p>
-        {hasFetchFailure ? (
-          <p className="resume-note" role="status">
-            Some live GitHub metadata could not be loaded. Showing fallback project details.
-          </p>
-        ) : null}
         {projectCards.map((project) => (
-          <article className="panel" key={project.repo}>
+          <article className="panel" key={project.title}>
             <h3>{project.title}</h3>
-            <p>{project.description}</p>
             <p className="resume-meta">Impact: {project.impact}</p>
-            <p className="resume-meta">Role: {project.role}</p>
-            <p className="resume-meta">Tech/Language: {project.language}</p>
-            <p>
+            <p className="resume-meta">
+              Role: {project.role}
+              {' · '}
               <a href={project.link} target="_blank" rel="noreferrer">
-                View on GitHub
+                Project link
               </a>
             </p>
+            {project.stack ? <p className="resume-meta">Stack: {project.stack}</p> : null}
+            {project.summary ? <p>{project.summary}</p> : null}
+            {project.highlights && project.highlights.length > 0 ? (
+              <ul className="resume-list">
+                {project.highlights.map((highlight) => (
+                  <li key={highlight}>{highlight}</li>
+                ))}
+              </ul>
+            ) : null}
           </article>
         ))}
       </div>
