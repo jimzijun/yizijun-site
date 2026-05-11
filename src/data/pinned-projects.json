@@ -1,0 +1,34 @@
+[
+  {
+    "title": "skills",
+    "impact": "Codifies repeatable AI-agent workflows so complex engineering tasks run faster and with fewer mistakes.",
+    "role": "Designer and maintainer of reusable automation playbooks",
+    "link": "https://github.com/jimzijun/skills",
+    "repo": "jimzijun/skills",
+    "blurb": "Reusable agent skills and automation playbooks focused on practical engineering execution."
+  },
+  {
+    "title": "career-cli",
+    "impact": "Improves recruiter and candidate throughput by turning job-search ops into scriptable terminal workflows.",
+    "role": "Built core CLI commands, UX flows, and data handling",
+    "link": "https://github.com/jimzijun/career-cli",
+    "repo": "jimzijun/career-cli",
+    "blurb": "Terminal-first toolkit for job-search workflows, helping recruiters and candidates review artifacts quickly."
+  },
+  {
+    "title": "job-search-ui",
+    "impact": "Makes application tracking and status visibility easier for faster decision-making.",
+    "role": "Implemented frontend architecture and recruiter-facing summaries",
+    "link": "https://github.com/jimzijun/job-search-ui",
+    "repo": "jimzijun/job-search-ui",
+    "blurb": "Frontend experience for organizing and tracking applications with clean recruiter-facing summaries."
+  },
+  {
+    "title": "github-project-viewer",
+    "impact": "Reduces time-to-signal when scanning portfolios by emphasizing curated, high-value repositories.",
+    "role": "Designed and implemented project curation and display logic",
+    "link": "https://github.com/jimzijun/github-project-viewer",
+    "repo": "jimzijun/github-project-viewer",
+    "blurb": "Curated GitHub project showcase utility built for fast scanning of high-signal repositories."
+  }
+]
