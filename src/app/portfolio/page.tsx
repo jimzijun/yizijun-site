@@ -58,10 +58,19 @@ const skills = {
 export default function PortfolioPage() {
   return (
     <section className="page resume-page">
-      <h1>Portfolio / Resume</h1>
-      <p className="lead">
-        Software engineer focused on backend systems, data infrastructure, and production ML workflows.
-      </p>
+      <article className="resume-hero panel">
+        <p className="resume-kicker">Building useful systems at scale</p>
+        <h1>Portfolio / Resume</h1>
+        <p className="lead">
+          Software engineer focused on backend systems, data infrastructure, and production ML workflows.
+        </p>
+        <div className="resume-highlight-pills" aria-label="Career highlights">
+          <span>30% infra cost saved</span>
+          <span>99.9% API uptime</span>
+          <span>30M+ papers indexed</span>
+          <span>2x simulation throughput</span>
+        </div>
+      </article>
 
       <article className="panel">
         <h3>Snapshot</h3>
@@ -75,7 +84,7 @@ export default function PortfolioPage() {
       <div className="resume-section">
         <h2>Experience</h2>
         {experience.map((item) => (
-          <article className="panel resume-entry" key={`${item.company}-${item.period}`}>
+          <article className="panel resume-entry resume-timeline-item" key={`${item.company}-${item.period}`}>
             <div className="resume-entry-header">
               <h3>{item.role}</h3>
               <p>{item.period}</p>
