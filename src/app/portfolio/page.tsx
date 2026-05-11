@@ -39,14 +39,95 @@ const experience: ExperienceItem[] = [
   },
 ];
 
-const projects = [
+type CuratedRepoConfig = {
+  repo: string;
+  blurb?: string;
+};
+
+const curatedProjects: CuratedRepoConfig[] = [
   {
-    name: 'Bakery Demand Forecasting System',
-    stack: 'Python, Streamlit, Square API, Time-series modeling',
-    details:
-      'Designed a fault-tolerant forecasting workflow that ingests live transaction data and serves real-time demand predictions for daily inventory planning.',
+    repo: 'jimzijun/skills',
+    blurb: 'Reusable agent skills and automation playbooks focused on practical engineering execution.',
+  },
+  {
+    repo: 'jimzijun/career-cli',
+    blurb: 'Terminal-first toolkit for job-search workflows, helping recruiters and candidates review artifacts quickly.',
+  },
+  {
+    repo: 'jimzijun/job-search-ui',
+    blurb: 'Frontend experience for organizing and tracking applications with clean recruiter-facing summaries.',
+  },
+  {
+    repo: 'jimzijun/github-project-viewer',
+    blurb: 'Curated GitHub project showcase utility built for fast scanning of high-signal repositories.',
   },
 ];
+
+type GithubRepoMetadata = {
+  full_name: string;
+  html_url: string;
+  description: string | null;
+  language: string | null;
+  name: string;
+};
+
+type ProjectCard = {
+  repo: string;
+  name: string;
+  url: string;
+  description: string;
+  language: string;
+};
+
+async function fetchCuratedProjects(): Promise<{ cards: ProjectCard[]; hasFetchFailure: boolean }> {
+  const results = await Promise.all(
+    curatedProjects.map(async (item) => {
+      try {
+        const response = await fetch(`https://api.github.com/repos/${item.repo}`, {
+          next: { revalidate: 3600 },
+          headers: {
+            Accept: 'application/vnd.github+json',
+            'User-Agent': 'yizijun-site-projects-section',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`GitHub fetch failed for ${item.repo}: ${response.status}`);
+        }
+
+        const repo = (await response.json()) as GithubRepoMetadata;
+        const description = item.blurb ?? repo.description ?? 'No description available yet.';
+
+        return {
+          card: {
+            repo: item.repo,
+            name: repo.name,
+            url: repo.html_url,
+            description,
+            language: repo.language ?? 'Not specified',
+          },
+          fetchFailed: false,
+        };
+      } catch {
+        return {
+          card: {
+            repo: item.repo,
+            name: item.repo.split('/')[1],
+            url: `https://github.com/${item.repo}`,
+            description: item.blurb ?? 'Project details are temporarily unavailable. View the repository on GitHub.',
+            language: 'Unavailable',
+          },
+          fetchFailed: true,
+        };
+      }
+    }),
+  );
+
+  return {
+    cards: results.map((result) => result.card),
+    hasFetchFailure: results.some((result) => result.fetchFailed),
+  };
+}
 
 const skills = {
   languages: ['Python', 'Java', 'SQL', 'Bash'],
@@ -55,7 +136,9 @@ const skills = {
   dataMl: ['Spark', 'Airflow', 'Elasticsearch', 'Pandas', 'NumPy', 'PyTorch', 'scikit-learn', 'Transformers/Embeddings'],
 };
 
-export default function PortfolioPage() {
+export default async function PortfolioPage() {
+  const { cards: projectCards, hasFetchFailure } = await fetchCuratedProjects();
+
   return (
     <section className="page resume-page">
       <article className="resume-hero panel">
@@ -101,13 +184,24 @@ export default function PortfolioPage() {
         ))}
       </div>
 
-      <div className="resume-section">
+      <div id="projects" className="resume-section">
         <h2>Projects</h2>
-        {projects.map((project) => (
-          <article className="panel" key={project.name}>
+        <p className="resume-meta">Curated repositories selected for recruiter-friendly scanning.</p>
+        {hasFetchFailure ? (
+          <p className="resume-note" role="status">
+            Some live GitHub metadata could not be loaded. Showing fallback project details.
+          </p>
+        ) : null}
+        {projectCards.map((project) => (
+          <article className="panel" key={project.repo}>
             <h3>{project.name}</h3>
-            <p className="resume-meta">{project.stack}</p>
-            <p>{project.details}</p>
+            <p>{project.description}</p>
+            <p className="resume-meta">Tech/Language: {project.language}</p>
+            <p>
+              <a href={project.url} target="_blank" rel="noreferrer">
+                View on GitHub
+              </a>
+            </p>
           </article>
         ))}
       </div>
