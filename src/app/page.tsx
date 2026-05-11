@@ -60,14 +60,12 @@ export default async function HomePage() {
             </ul>
           </article>
           <article className="panel">
-            <h3>Public Metrics (in review)</h3>
-            <p className="resume-meta">
-              Final recruiter-facing metrics are being finalized; placeholders remain until approval.
-            </p>
+            <h3>Public Metrics</h3>
+            <p className="resume-meta">Selected recruiter-facing outcomes from shipped work:</p>
             <ul className="resume-list">
-              <li>Production reliability metric — pending approval</li>
-              <li>Delivery velocity metric — pending approval</li>
-              <li>Scale/impact metric — pending approval</li>
+              <li><strong>99.9% API uptime</strong> for simulation orchestration services</li>
+              <li><strong>~30% infrastructure cost reduction</strong> after Kubernetes migration</li>
+              <li><strong>30M+ scientific documents processed/indexed</strong> for large-scale retrieval pipelines</li>
             </ul>
           </article>
         </div>
