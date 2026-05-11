@@ -34,3 +34,23 @@ Repository settings requirement:
 - `/portfolio` Portfolio overview sections
 - `/games` Games landing
 - `/games/snake` Snake mini-game
+
+## Curated Projects (pinned source)
+
+Portfolio project cards are loaded from:
+
+- `src/data/pinned-projects.json`
+
+Required fields per entry:
+
+- `title` (string)
+- `impact` (string, one-line outcome)
+- `role` (string)
+- `link` (string URL)
+
+Optional fields:
+
+- `blurb` (string, display description override)
+- `repo` should be `owner/repo` and is used for GitHub metadata hydration
+
+Runtime validation is in `src/app/portfolio/page.tsx` (`isPinnedProject` + `getPinnedProjects`). Invalid entries fail fast during render/build.

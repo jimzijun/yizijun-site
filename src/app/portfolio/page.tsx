@@ -1,3 +1,5 @@
+import pinnedProjectsRaw from '@/data/pinned-projects.json';
+
 const highlights = [
   '3+ years shipping production data and backend systems',
   '30% infrastructure cost reduction on Kubernetes migration',
@@ -39,29 +41,43 @@ const experience: ExperienceItem[] = [
   },
 ];
 
-type CuratedRepoConfig = {
+type PinnedProject = {
+  title: string;
+  impact: string;
+  role: string;
+  link: string;
   repo: string;
   blurb?: string;
 };
 
-const curatedProjects: CuratedRepoConfig[] = [
-  {
-    repo: 'jimzijun/skills',
-    blurb: 'Reusable agent skills and automation playbooks focused on practical engineering execution.',
-  },
-  {
-    repo: 'jimzijun/career-cli',
-    blurb: 'Terminal-first toolkit for job-search workflows, helping recruiters and candidates review artifacts quickly.',
-  },
-  {
-    repo: 'jimzijun/job-search-ui',
-    blurb: 'Frontend experience for organizing and tracking applications with clean recruiter-facing summaries.',
-  },
-  {
-    repo: 'jimzijun/github-project-viewer',
-    blurb: 'Curated GitHub project showcase utility built for fast scanning of high-signal repositories.',
-  },
-];
+function isPinnedProject(value: unknown): value is PinnedProject {
+  if (!value || typeof value !== 'object') return false;
+
+  const candidate = value as Record<string, unknown>;
+
+  return (
+    typeof candidate.title === 'string' &&
+    typeof candidate.impact === 'string' &&
+    typeof candidate.role === 'string' &&
+    typeof candidate.link === 'string' &&
+    typeof candidate.repo === 'string' &&
+    (candidate.blurb === undefined || typeof candidate.blurb === 'string')
+  );
+}
+
+function getPinnedProjects(): PinnedProject[] {
+  if (!Array.isArray(pinnedProjectsRaw)) {
+    throw new Error('Pinned projects JSON must be an array.');
+  }
+
+  const parsed = pinnedProjectsRaw.filter(isPinnedProject);
+
+  if (parsed.length !== pinnedProjectsRaw.length) {
+    throw new Error('Pinned projects JSON contains invalid entries.');
+  }
+
+  return parsed;
+}
 
 type GithubRepoMetadata = {
   full_name: string;
@@ -73,15 +89,19 @@ type GithubRepoMetadata = {
 
 type ProjectCard = {
   repo: string;
-  name: string;
-  url: string;
+  title: string;
+  link: string;
   description: string;
   language: string;
+  impact: string;
+  role: string;
 };
 
 async function fetchCuratedProjects(): Promise<{ cards: ProjectCard[]; hasFetchFailure: boolean }> {
+  const pinnedProjects = getPinnedProjects();
+
   const results = await Promise.all(
-    curatedProjects.map(async (item) => {
+    pinnedProjects.map(async (item) => {
       try {
         const response = await fetch(`https://api.github.com/repos/${item.repo}`, {
           next: { revalidate: 3600 },
@@ -101,10 +121,12 @@ async function fetchCuratedProjects(): Promise<{ cards: ProjectCard[]; hasFetchF
         return {
           card: {
             repo: item.repo,
-            name: repo.name,
-            url: repo.html_url,
+            title: item.title,
+            link: item.link || repo.html_url,
             description,
             language: repo.language ?? 'Not specified',
+            impact: item.impact,
+            role: item.role,
           },
           fetchFailed: false,
         };
@@ -112,10 +134,12 @@ async function fetchCuratedProjects(): Promise<{ cards: ProjectCard[]; hasFetchF
         return {
           card: {
             repo: item.repo,
-            name: item.repo.split('/')[1],
-            url: `https://github.com/${item.repo}`,
+            title: item.title,
+            link: item.link || `https://github.com/${item.repo}`,
             description: item.blurb ?? 'Project details are temporarily unavailable. View the repository on GitHub.',
             language: 'Unavailable',
+            impact: item.impact,
+            role: item.role,
           },
           fetchFailed: true,
         };
@@ -194,11 +218,13 @@ export default async function PortfolioPage() {
         ) : null}
         {projectCards.map((project) => (
           <article className="panel" key={project.repo}>
-            <h3>{project.name}</h3>
+            <h3>{project.title}</h3>
             <p>{project.description}</p>
+            <p className="resume-meta">Impact: {project.impact}</p>
+            <p className="resume-meta">Role: {project.role}</p>
             <p className="resume-meta">Tech/Language: {project.language}</p>
             <p>
-              <a href={project.url} target="_blank" rel="noreferrer">
+              <a href={project.link} target="_blank" rel="noreferrer">
                 View on GitHub
               </a>
             </p>

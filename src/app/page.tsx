@@ -1,7 +1,10 @@
 import Link from 'next/link';
 import BubbleBackground from '@/components/BubbleBackground';
+import { getPinnedProjects } from '@/lib/projects';
 
 export default function HomePage() {
+  const projects = getPinnedProjects();
+
   return (
     <>
       <BubbleBackground />
@@ -17,15 +20,32 @@ export default function HomePage() {
       <section id="projects" aria-labelledby="projects-heading" className="resume-section">
         <h2 id="projects-heading">Projects</h2>
         <div className="grid">
-          <article className="panel">
-            <h3>Portfolio Showcase</h3>
-            <p>A curated set of software, automation, and AI projects.</p>
-            <p>
-              <Link className="nav-link" href="/portfolio">
-                View project details
-              </Link>
-            </p>
-          </article>
+          {projects.map((project) => (
+            <article className="panel" key={project.title}>
+              <h3>{project.title}</h3>
+              <p>{project.impact}</p>
+              <p>
+                <strong>Role:</strong> {project.role}
+              </p>
+              {project.tags && (
+                <p>
+                  <strong>Tags:</strong> {project.tags.join(', ')}
+                </p>
+              )}
+              {project.highlights && (
+                <ul>
+                  {project.highlights.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              )}
+              <p>
+                <a className="nav-link" href={project.link} target="_blank" rel="noreferrer">
+                  View project
+                </a>
+              </p>
+            </article>
+          ))}
         </div>
       </section>
     </>

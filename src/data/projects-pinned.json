@@ -1,0 +1,21 @@
+[
+  {
+    "title": "Hermes Webhook FSM Automation",
+    "impact": "Built issue-driven automation to move child tasks from ready to done with dependency-aware unblocking.",
+    "role": "AI engineer",
+    "link": "https://github.com/jimzijun/yizijun-site",
+    "tags": ["automation", "github", "workflow"],
+    "highlights": [
+      "Label-only state machine",
+      "Dependency parsing via 'Blocked by: #...'",
+      "Fail-closed blocker handling"
+    ]
+  },
+  {
+    "title": "Personal Site (Next.js)",
+    "impact": "Shipped recruiter-facing portfolio and game showcase with GitHub Pages delivery.",
+    "role": "Full-stack developer",
+    "link": "https://jimzijun.github.io/yizijun-site/",
+    "tags": ["nextjs", "typescript", "frontend"]
+  }
+]
