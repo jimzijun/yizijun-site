@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lh:serve": "npx --yes serve out -l 4173",
+    "lh:report": "npx --yes lighthouse http://127.0.0.1:4173/ --preset=desktop --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --only-categories=performance,accessibility --output=json --output-path=./lighthouse-report.json --quiet",
+    "quality:check": "npm run build && (npm run lh:serve >/tmp/yizi_lh_serve.log 2>&1 &) && sleep 2 && npm run lh:report"
   },
   "dependencies": {
     "next": "15.5.15",
