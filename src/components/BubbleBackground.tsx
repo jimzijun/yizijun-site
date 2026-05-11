@@ -52,6 +52,9 @@ export default function BubbleBackground() {
     let circles: Circle[] = [];
     let failedAttempts = 0;
 
+    const isLikelyMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    const WIDTH_JITTER_EPSILON_PX = 2;
+
     const collidesWithExisting = (x: number, y: number, extraRadius = 0, skipIndex = -1): boolean => {
       for (let i = 0; i < circles.length; i += 1) {
         if (i === skipIndex) continue;
@@ -117,12 +120,28 @@ export default function BubbleBackground() {
 
       if (shouldAnimate && failedAttempts <= GLOBAL_ATTEMPT_CAP) {
         rafId = window.requestAnimationFrame(tick);
+      } else {
+        rafId = 0;
       }
     };
 
-    const resize = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
+    const resize = (forceRebuild = false) => {
+      const nextWidth = Math.round(window.visualViewport?.width ?? window.innerWidth);
+      const nextHeight = Math.round(window.visualViewport?.height ?? window.innerHeight);
+
+      const prevWidth = width || nextWidth;
+      const prevHeight = height || nextHeight;
+      const widthDelta = Math.abs(nextWidth - prevWidth);
+      const heightDelta = Math.abs(nextHeight - prevHeight);
+      const widthChangedMeaningfully = widthDelta > WIDTH_JITTER_EPSILON_PX;
+      const isMobileUiJitter =
+        !forceRebuild &&
+        isLikelyMobile &&
+        !widthChangedMeaningfully &&
+        heightDelta > 0;
+
+      width = nextWidth;
+      height = nextHeight;
 
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
@@ -130,15 +149,28 @@ export default function BubbleBackground() {
       canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      circles = [];
-      failedAttempts = 0;
       shouldAnimate = !media.matches;
 
-      draw();
+      if (forceRebuild || circles.length === 0) {
+        circles = [];
+        failedAttempts = 0;
+      } else if (!isMobileUiJitter) {
+        const sx = width / prevWidth;
+        const sy = height / prevHeight;
+        const sr = Math.min(sx, sy);
+        circles = circles
+          .map((c) => ({ ...c, x: c.x * sx, y: c.y * sy, r: c.r * sr }))
+          .filter((c) => c.x + c.r >= 0 && c.x - c.r <= width && c.y + c.r >= 0 && c.y - c.r <= height);
+      }
+
       if (shouldAnimate) {
-        if (rafId) window.cancelAnimationFrame(rafId);
-        rafId = window.requestAnimationFrame(tick);
+        draw();
+        if (!rafId) rafId = window.requestAnimationFrame(tick);
       } else {
+        if (rafId) {
+          window.cancelAnimationFrame(rafId);
+          rafId = 0;
+        }
         // Reduced-motion fallback: build a static packed frame and stop.
         while (failedAttempts <= GLOBAL_ATTEMPT_CAP) {
           for (let i = 0; i < TOTAL_ATTEMPTS_PER_FRAME; i += 1) {
@@ -161,19 +193,36 @@ export default function BubbleBackground() {
     };
 
     const onMotionChange = () => {
-      if (rafId) window.cancelAnimationFrame(rafId);
-      resize();
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+      resize(true);
     };
 
-    window.addEventListener('resize', resize);
-    media.addEventListener('change', onMotionChange);
+    const onResize = () => {
+      resize(false);
+    };
+
+    window.addEventListener('resize', onResize);
+    window.visualViewport?.addEventListener('resize', onResize);
+    if (typeof media.addEventListener === 'function') {
+      media.addEventListener('change', onMotionChange);
+    } else if (typeof media.addListener === 'function') {
+      media.addListener(onMotionChange);
+    }
 
     resize();
 
     return () => {
       if (rafId) window.cancelAnimationFrame(rafId);
-      window.removeEventListener('resize', resize);
-      media.removeEventListener('change', onMotionChange);
+      window.removeEventListener('resize', onResize);
+      window.visualViewport?.removeEventListener('resize', onResize);
+      if (typeof media.removeEventListener === 'function') {
+        media.removeEventListener('change', onMotionChange);
+      } else if (typeof media.removeListener === 'function') {
+        media.removeListener(onMotionChange);
+      }
     };
   }, []);
 
