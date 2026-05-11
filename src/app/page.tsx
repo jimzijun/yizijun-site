@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import BubbleBackground from '@/components/BubbleBackground';
+import CTAEventLink from '@/components/CTAEventLink';
 import { getHybridProjects } from '@/lib/projects';
 
 export const metadata: Metadata = {
@@ -21,7 +22,9 @@ export default async function HomePage() {
   return (
     <>
       <BubbleBackground />
-      <a className="sticky-contact-cta" href="#contact">Contact Jim</a>
+      <CTAEventLink className="sticky-contact-cta" href="#contact" ctaId="contact-jim-sticky" placement="sticky">
+        Contact Jim
+      </CTAEventLink>
 
       <section className="hero hero--foreground recruiter-hero" aria-labelledby="home-hero-heading">
         <p className="hero-eyebrow">Open to AI Engineer opportunities</p>
@@ -32,7 +35,9 @@ export default async function HomePage() {
         </p>
         <div className="cta-row">
           <Link className="card-link" href="/portfolio">View AI Project Proof</Link>
-          <a className="card-link" href="#contact">Contact Jim</a>
+          <CTAEventLink className="card-link" href="#contact" ctaId="contact-jim-hero" placement="hero">
+            Contact Jim
+          </CTAEventLink>
         </div>
       </section>
 
@@ -73,27 +78,37 @@ export default async function HomePage() {
         <h2 id="contact-heading">Contact</h2>
         <p className="lead contact-intro">Best for recruiter outreach, interview loops, and collaboration discussions.</p>
         <div className="contact-actions">
-          <a className="card-link" href="mailto:yizijuny@gmail.com" aria-label="Email Jim at yizijuny@gmail.com">
+          <CTAEventLink
+            className="card-link"
+            href="mailto:yizijuny@gmail.com"
+            aria-label="Email Jim at yizijuny@gmail.com"
+            ctaId="contact-email"
+            placement="contact-panel"
+          >
             Email
-          </a>
-          <a
+          </CTAEventLink>
+          <CTAEventLink
             className="card-link"
             href="https://calendly.com/yizijuny"
             target="_blank"
             rel="noreferrer"
             aria-label="Book time with Jim on Calendly"
+            ctaId="contact-calendly"
+            placement="contact-panel"
           >
             Calendly
-          </a>
-          <a
+          </CTAEventLink>
+          <CTAEventLink
             className="card-link"
             href="https://www.linkedin.com/in/zijun-yi-03a4382ab"
             target="_blank"
             rel="noreferrer"
             aria-label="Open Jim's LinkedIn profile"
+            ctaId="contact-linkedin"
+            placement="contact-panel"
           >
             LinkedIn
-          </a>
+          </CTAEventLink>
         </div>
       </section>
 
