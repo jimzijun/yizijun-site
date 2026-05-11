@@ -1,5 +1,18 @@
+import type { Metadata } from 'next';
 import pinnedProjectCards from '@/data/projects.pinned.json';
 import { parsePinnedProjectCards } from '@/lib/project-cards';
+
+export const metadata: Metadata = {
+  title: 'Portfolio',
+  description:
+    'Portfolio and resume highlights for AI Engineer roles: production systems, reliability metrics, and project proof.',
+  openGraph: {
+    title: 'Portfolio | Zijun Yi',
+    description:
+      'Production reliability, shipped AI workflows, and recruiter-facing project outcomes from Zijun Yi.',
+    url: 'https://jimzijun.github.io/yizijun-site/portfolio',
+  },
+};
 
 const highlights = [
   '3+ years shipping production data and backend systems',

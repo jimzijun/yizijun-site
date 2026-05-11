@@ -3,8 +3,27 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Yizijun's Website",
-  description: 'Recreated with Next.js',
+  metadataBase: new URL('https://jimzijun.github.io/yizijun-site'),
+  title: {
+    default: 'Zijun Yi | AI Engineer',
+    template: '%s | Zijun Yi',
+  },
+  description:
+    'AI Engineer focused on production agents, backend automation, and reliable ML systems. Explore projects, portfolio highlights, and contact options.',
+  openGraph: {
+    type: 'website',
+    title: 'Zijun Yi | AI Engineer',
+    description:
+      'Production-ready AI systems, automation workflows, and recruiter-focused project proof from Zijun Yi.',
+    url: 'https://jimzijun.github.io/yizijun-site',
+    siteName: 'Zijun Yi Portfolio',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Zijun Yi | AI Engineer',
+    description:
+      'Production-ready AI systems, automation workflows, and recruiter-focused project proof from Zijun Yi.',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
