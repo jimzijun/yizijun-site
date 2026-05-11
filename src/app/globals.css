@@ -154,6 +154,58 @@ a {
   margin-inline: auto;
 }
 
+.hero-eyebrow {
+  margin-bottom: var(--space-3);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: color-mix(in srgb, var(--color-accent) 85%, var(--color-text));
+  font-size: 0.82rem;
+}
+
+.hero-subcopy {
+  letter-spacing: 0;
+  font-size: 1.03rem;
+}
+
+.recruiter-hero {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.sticky-contact-cta {
+  position: fixed;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  z-index: 30;
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.8rem 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 70%, var(--color-border));
+  background: color-mix(in srgb, var(--color-surface) 72%, #0f172a);
+  box-shadow: var(--shadow-lift);
+}
+
+.sticky-contact-cta:hover {
+  border-color: var(--color-accent-strong);
+  background: color-mix(in srgb, var(--color-surface) 62%, var(--color-accent-strong));
+}
+
+.contact-section {
+  margin-top: var(--space-6);
+}
+
+.contact-intro {
+  margin: 0;
+}
+
+.contact-actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
 .cta-row {
   display: flex;
   justify-content: center;
@@ -415,6 +467,13 @@ a {
   .snake-canvas {
     width: min(100%, 360px);
     height: auto;
+  }
+
+  .sticky-contact-cta {
+    left: var(--space-4);
+    right: var(--space-4);
+    bottom: var(--space-4);
+    text-align: center;
   }
 
   .resume-timeline-item {
