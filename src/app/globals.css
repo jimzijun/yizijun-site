@@ -241,6 +241,49 @@ a {
   color: var(--color-text-muted);
 }
 
+.resume-page {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.resume-section {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.resume-section h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.resume-entry {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.resume-entry-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.resume-entry-header p,
+.resume-meta {
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.resume-list,
+.resume-skill-groups {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--color-text-muted);
+  display: grid;
+  gap: 0.35rem;
+}
+
 .panel-link {
   display: block;
 }
