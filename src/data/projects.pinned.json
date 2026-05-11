@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Bakery Demand Forecasting System",
+    "impact": "Delivered real-time demand predictions to improve daily inventory planning accuracy.",
+    "role": "Full-stack ML Engineer",
+    "link": "https://github.com/jimzijun",
+    "stack": "Python, Streamlit, Square API, Time-series modeling",
+    "summary": "Designed a fault-tolerant workflow that ingests live transactions and serves operational forecasts.",
+    "highlights": [
+      "Ingested and normalized live POS data",
+      "Served near real-time demand forecasts for planning"
+    ]
+  }
+]
