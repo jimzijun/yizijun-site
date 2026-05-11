@@ -1,51 +1,134 @@
-const sections = [
+const highlights = [
+  '3+ years shipping production data and backend systems',
+  '30% infrastructure cost reduction on Kubernetes migration',
+  '99.9% API uptime for simulation orchestration services',
+  'Scaled ML/data pipelines to 30M+ scientific documents',
+];
+
+type ExperienceItem = {
+  company: string;
+  role: string;
+  period: string;
+  location: string;
+  bullets: string[];
+};
+
+const experience: ExperienceItem[] = [
   {
-    title: 'Professional Summary',
-    text:
-      'Software Engineer with 3+ years of experience building distributed data systems and scalable backend infrastructure. Strong in Kubernetes orchestration, cloud-native architecture, and Python/Django API development. Delivered measurable impact including 30% infrastructure cost reduction and an 80% drop in production incidents.',
+    company: 'Bases Data Science (NielsenIQ)',
+    role: 'Software Engineer',
+    period: '2022 – Present',
+    location: 'Chicago, IL',
+    bullets: [
+      'Led migration of a core simulation engine to Kubernetes with health checks and observability, improving reliability while lowering compute costs by ~30%.',
+      'Built and maintained Django REST APIs for simulation lifecycle orchestration, supporting high availability and 99.9% uptime.',
+      'Optimized memory-heavy simulation paths with NumPy vectorization, enabling roughly 2x scenario throughput on high-dimensional workloads.',
+      'Partnered with product and data science teams to turn experimental models into repeatable production services.',
+    ],
   },
   {
-    title: 'Current Role Impact — Bases Data Science (NielsenIQ)',
-    text:
-      'Architected migration of a core simulation engine to Kubernetes with robust health checks and monitoring, improving reliability while reducing compute cost by 30%. Built a high-availability Django REST API to orchestrate simulation lifecycles with 99.9% uptime. Removed memory bottlenecks through NumPy vectorization, doubling simulation capacity for high-dimensional scenarios.',
-  },
-  {
-    title: 'Research & Data Engineering Experience',
-    text:
-      'At Syracuse University\'s Science of Science and Computational Discovery Lab, developed an LSA + TF-IDF topic-modeling pipeline for scientific-paper recommendations. Scaled processing to 30M+ documents with Spark and indexed embeddings in Elasticsearch. Also researched bias in language and speech systems using a 2AFC evaluation framework.',
-  },
-  {
-    title: 'Selected Project — Bakery Demand Forecasting',
-    text:
-      'Built a fault-tolerant forecasting system connected to the Square API. Designed an orchestration pipeline to ingest live transactions and served real-time demand predictions via Streamlit to support day-to-day inventory decisions.',
-  },
-  {
-    title: 'Core Skills',
-    text:
-      'Python, Java, SQL, Bash • Kubernetes, Docker, CI/CD • Spark, Airflow, Elasticsearch, Redis, SQL Server • PyTorch, scikit-learn, Transformers/Embeddings, Pandas, NumPy.',
-  },
-  {
-    title: 'Education & Publication',
-    text:
-      'M.S. in Applied Data Science and B.S. in Information Management & Technology (Syracuse University). Co-authored research on predicting scientific dataset usage from bibliometric signals.',
+    company: 'Syracuse University — Science of Science & Computational Discovery Lab',
+    role: 'Research Assistant',
+    period: '2021 – 2022',
+    location: 'Syracuse, NY',
+    bullets: [
+      'Developed an LSA + TF-IDF recommendation pipeline for scientific literature discovery.',
+      'Processed and indexed 30M+ papers using Spark and Elasticsearch to support large-scale retrieval.',
+      'Contributed to evaluation work on linguistic and speech bias using a 2AFC framework for comparative analysis.',
+    ],
   },
 ];
 
+const projects = [
+  {
+    name: 'Bakery Demand Forecasting System',
+    stack: 'Python, Streamlit, Square API, Time-series modeling',
+    details:
+      'Designed a fault-tolerant forecasting workflow that ingests live transaction data and serves real-time demand predictions for daily inventory planning.',
+  },
+];
+
+const skills = {
+  languages: ['Python', 'Java', 'SQL', 'Bash'],
+  backend: ['Django', 'REST APIs', 'Redis', 'SQL Server'],
+  infra: ['Kubernetes', 'Docker', 'CI/CD', 'Monitoring/Health checks'],
+  dataMl: ['Spark', 'Airflow', 'Elasticsearch', 'Pandas', 'NumPy', 'PyTorch', 'scikit-learn', 'Transformers/Embeddings'],
+};
+
 export default function PortfolioPage() {
   return (
-    <section className="page">
-      <h1>Portfolio</h1>
+    <section className="page resume-page">
+      <h1>Portfolio / Resume</h1>
       <p className="lead">
-        Recruiter-ready overview of experience, technical depth, and outcomes based on the latest resume.
+        Software engineer focused on backend systems, data infrastructure, and production ML workflows.
       </p>
-      <div className="grid">
-        {sections.map((section) => (
-          <article className="panel" key={section.title}>
-            <h3>{section.title}</h3>
-            <p>{section.text}</p>
+
+      <article className="panel">
+        <h3>Snapshot</h3>
+        <ul className="resume-list">
+          {highlights.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      </article>
+
+      <div className="resume-section">
+        <h2>Experience</h2>
+        {experience.map((item) => (
+          <article className="panel resume-entry" key={`${item.company}-${item.period}`}>
+            <div className="resume-entry-header">
+              <h3>{item.role}</h3>
+              <p>{item.period}</p>
+            </div>
+            <p className="resume-meta">
+              {item.company} · {item.location}
+            </p>
+            <ul className="resume-list">
+              {item.bullets.map((bullet) => (
+                <li key={bullet}>{bullet}</li>
+              ))}
+            </ul>
           </article>
         ))}
       </div>
+
+      <div className="resume-section">
+        <h2>Projects</h2>
+        {projects.map((project) => (
+          <article className="panel" key={project.name}>
+            <h3>{project.name}</h3>
+            <p className="resume-meta">{project.stack}</p>
+            <p>{project.details}</p>
+          </article>
+        ))}
+      </div>
+
+      <article className="panel">
+        <h3>Skills</h3>
+        <ul className="resume-skill-groups">
+          <li>
+            <strong>Languages:</strong> {skills.languages.join(', ')}
+          </li>
+          <li>
+            <strong>Backend:</strong> {skills.backend.join(', ')}
+          </li>
+          <li>
+            <strong>Infrastructure:</strong> {skills.infra.join(', ')}
+          </li>
+          <li>
+            <strong>Data & ML:</strong> {skills.dataMl.join(', ')}
+          </li>
+        </ul>
+      </article>
+
+      <article className="panel">
+        <h3>Education & Publication</h3>
+        <ul className="resume-list">
+          <li>M.S. Applied Data Science, Syracuse University</li>
+          <li>B.S. Information Management & Technology, Syracuse University</li>
+          <li>Co-authored research on predicting scientific dataset usage from bibliometric signals</li>
+        </ul>
+      </article>
     </section>
   );
 }
