@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import BubbleBackground from '@/components/BubbleBackground';
-import { getPinnedProjects } from '@/lib/projects';
+import { getHybridProjects } from '@/lib/projects';
 
 export const metadata: Metadata = {
   title: 'Home',
@@ -15,8 +15,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HomePage() {
-  const projects = getPinnedProjects();
+export default async function HomePage() {
+  const projects = await getHybridProjects('jimzijun');
 
   return (
     <>
@@ -68,20 +68,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="projects" aria-labelledby="projects-heading" className="resume-section">
-        <h2 id="projects-heading">Projects</h2>
-        <div className="grid">
-          <article className="panel">
-            <h3>Portfolio Showcase</h3>
-            <p>A curated set of software, automation, and AI projects.</p>
-            <p>
-              <Link className="nav-link" href="/portfolio">
-                View project details
-              </Link>
-            </p>
-          </article>
-        </div>
-      </section>
 
       <section id="contact" aria-labelledby="contact-heading" className="resume-section contact-section panel">
         <h2 id="contact-heading">Contact</h2>
@@ -117,16 +103,20 @@ export default function HomePage() {
           {projects.map((project) => (
             <article className="panel" key={project.title}>
               <h3>{project.title}</h3>
-              <p>{project.impact}</p>
+              <p>{project.description}</p>
               <p>
                 <strong>Role:</strong> {project.role}
               </p>
-              {project.tags && (
+              <p>
+                <strong>Tech/Language:</strong> {project.language}
+              </p>
+              <p className="resume-meta">{project.impact}</p>
+              {project.tags && project.tags.length > 0 && (
                 <p>
                   <strong>Tags:</strong> {project.tags.join(', ')}
                 </p>
               )}
-              {project.highlights && (
+              {project.highlights && project.highlights.length > 0 && (
                 <ul>
                   {project.highlights.map((item) => (
                     <li key={item}>{item}</li>
@@ -135,7 +125,7 @@ export default function HomePage() {
               )}
               <p>
                 <a className="nav-link" href={project.link} target="_blank" rel="noreferrer">
-                  View project
+                  View on GitHub
                 </a>
               </p>
             </article>
