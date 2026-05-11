@@ -1,21 +1,38 @@
 [
   {
-    "title": "Hermes Webhook FSM Automation",
-    "impact": "Built issue-driven automation to move child tasks from ready to done with dependency-aware unblocking.",
-    "role": "AI engineer",
-    "link": "https://github.com/jimzijun/yizijun-site",
-    "tags": ["automation", "github", "workflow"],
-    "highlights": [
-      "Label-only state machine",
-      "Dependency parsing via 'Blocked by: #...'",
-      "Fail-closed blocker handling"
-    ]
+    "repo": "jimzijun/skills",
+    "title": "Hermes Agent Skills Library",
+    "impact": "Codified reusable agent workflows to accelerate issue-to-PR delivery and reduce repeated manual debugging.",
+    "role": "AI Engineer",
+    "link": "https://github.com/jimzijun/skills",
+    "blurb": "A production-oriented skill library for structured agent execution, debugging, and automation workflows.",
+    "tags": ["agentic-ai", "automation", "developer-productivity"]
   },
   {
-    "title": "Personal Site (Next.js)",
-    "impact": "Shipped recruiter-facing portfolio and game showcase with GitHub Pages delivery.",
-    "role": "Full-stack developer",
-    "link": "https://jimzijun.github.io/yizijun-site/",
-    "tags": ["nextjs", "typescript", "frontend"]
+    "repo": "jimzijun/career-cli",
+    "title": "Career CLI",
+    "impact": "Improved personal job-search execution by turning repetitive application tasks into scriptable terminal workflows.",
+    "role": "Builder",
+    "link": "https://github.com/jimzijun/career-cli",
+    "blurb": "CLI tooling for structured job-tracking, outreach workflows, and application operations.",
+    "tags": ["cli", "python", "job-search"]
+  },
+  {
+    "repo": "jimzijun/job-search-ui",
+    "title": "Job Search UI",
+    "impact": "Created a recruiter-facing and candidate-facing interface for tracking opportunities and progress transparently.",
+    "role": "Full-stack Engineer",
+    "link": "https://github.com/jimzijun/job-search-ui",
+    "blurb": "Web UI for managing opportunities, status funnels, and career pipeline visibility.",
+    "tags": ["frontend", "react", "workflow"]
+  },
+  {
+    "repo": "jimzijun/github-project-viewer",
+    "title": "GitHub Project Viewer",
+    "impact": "Built quick-glance portfolio surfacing for repositories and project metadata to improve recruiter scanning.",
+    "role": "Full-stack Engineer",
+    "link": "https://github.com/jimzijun/github-project-viewer",
+    "blurb": "A lightweight project browser for GitHub repositories with metadata-focused presentation.",
+    "tags": ["github-api", "portfolio", "typescript"]
   }
 ]
